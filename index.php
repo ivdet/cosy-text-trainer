@@ -1,7 +1,24 @@
 <?php
 
-
-
+require __DIR__ . '/vendor/autoload.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+    $ctrl = new \CosyTextTrainer\Ctrl\DefaultController();
+    $dataset = $ctrl->indexAction();
+    $text = isset($dataset['text'])?$dataset['text']:'';
+if(isset($_GET['addword']) && isset($_POST['word']))
+{
+    // TODO 1: ekran & model
+    $word = $_POST['word'];
+    $ctrl->addWordAction(intval($word['article_id']), $word['content']);
+}
+elseif(isset($_GET['addarticle']) && isset($_POST['article']))
+{
+    // TODO 1: ekran & model
+    $article = $_POST['article'];
+    print_r($article);
+    $ctrl->addArticleAction($article['content'], intval($article['language_id']));
+}
 $name = "Cosy Text trainer";
 
 ?><!DOCTYPE html>
@@ -43,8 +60,9 @@ $name = "Cosy Text trainer";
         
         <div class = "tab-content">
            <div class = "tab-pane fade in active" id = "h">
-           <textarea id="input_area"></textarea>
+           <textarea id="input_area"><?php echo $text;?></textarea>
            <div id="result"></div>
+           <button id="add-article">add article</button>
            </div>
            <div class = "tab-pane fade" id = "s">streetdiv</div>
         </div>
@@ -54,13 +72,33 @@ $name = "Cosy Text trainer";
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
         
-        
+           
         <script>
         $(document).ready(function(){
             
             $('#input_area').dblclick(function(){
-                $('#result').append($('<div>' + window.getSelection().toString() + '</div>'));
+                word = window.getSelection().toString();
+                $('#result').append($('<div>' + word + '</div>'));
+                $.ajax({
+                  type: "POST",
+                  url: 'index.php?addword=1',
+                  data: {"word":{"article_id":2, "content":word}},
+                  success: function(){alert('added');},
+                  dataType: "json"
+                });
                 
+            });
+            
+            $('#add-article').click(function(){
+                content = $('textarea#input_area').val();
+                $.ajax({
+                  type: "POST",
+                  url: 'index.php?addarticle=1',
+                  data: {"article":{"language_id":1, "content":content}},
+                  success: function(){alert('added');},
+                  dataType: "json"
+                });
+                                
             });
             
         });

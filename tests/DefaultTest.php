@@ -7,7 +7,7 @@ class DefaultTest extends PHPUnit_Framework_TestCase {
 	public function testInit(){
 		$_ctrl = new DefaultController();
 		$data = $_ctrl->indexAction();
-		//var_dump($data);
+		var_dump($data);
 		$this->assertEquals(array_keys($data),array("tabs"));
 		$tab = array_shift($data["tabs"]);
 		//var_dump($tab);
@@ -23,8 +23,10 @@ class DefaultTest extends PHPUnit_Framework_TestCase {
 	public function testDBStructure()
 	{
 	    $tables = array("article", "word", "article_word", "language", "translate");
-	    foreach($tables as $table) LaserValidate::table($table)->exists();
+	    foreach($tables as $table) LaserValidate::table($table)->exists(); 
 	    
 	}
+	
+	/* TODO: mock test */
 }
 
